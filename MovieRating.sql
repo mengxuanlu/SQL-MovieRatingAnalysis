@@ -81,7 +81,7 @@ FROM reviewers;
 SELECT *
 FROM ratings;
 
-# Q1.Remove duplicates for table ratings. We found some reviewers rate the same movie twice, 
+# Q0.1.Remove duplicates for table ratings. We found some reviewers rate the same movie twice, 
 # we will just keep the first time rating.
 # create a copy of the table ratings
 CREATE TABLE ratings_copy LIKE ratings;
@@ -115,7 +115,7 @@ SELECT *
 FROM ratings;
 SET SQL_SAFE_UPDATES = 0;
 
-#Q2. Find each reviwer's lowest rating movie, 
+#Q1. Find each reviwer's lowest rating movie, 
 # return the reviewer name, movie title, and number of stars. 
  WITH loweststar AS(
 	SELECT rv.name, mv.title, rt.stars, 
@@ -131,7 +131,7 @@ SELECT name, title, stars
 FROM loweststar
 WHERE movie_ranking = 1;
 
-# Q3. Find each movie with the lowest rating in the database, 
+# Q2. Find each movie with the lowest rating in the database, 
 # return the reviewer name, movie title, and number of stars. 
 SELECT rv.name, mv.title, rt.stars
 FROM ratings rt
@@ -144,7 +144,7 @@ WHERE rt.stars = (SELECT MIN(stars)
                   );
                   
 
-# Q4. Find the lowest star for each movie, return the reviewer name, movie title, and number of stars
+# Q3. Find the lowest star for each movie, return the reviewer name, movie title, and number of stars
 WITH lowestrate AS (
 	SELECT rv.name,mv.title,rt.stars,
     ROW_NUMBER() OVER (PARTITION BY mv.title ORDER BY rt.stars) AS lowest_star
@@ -159,7 +159,7 @@ SELECT name, title, stars
 FROM lowestrate
 WHERE lowest_star = 1;
 
-# Q5. List movie titles and avg ratings, from highest rated to lowest-rated. 
+# Q4. List movie titles and avg ratings, from highest rated to lowest-rated. 
 --  If two or more movies have the same avg rating, list them in alphabetical order. 
 SELECT mv.title, avg(rt.stars)
 FROM movies mv
@@ -168,7 +168,7 @@ ON mv.mid = rt.mid
 GROUP BY mv.mid
 ORDER BY avg(rt.stars) DESC, mv.title;
 
-# Q6. Find the names of all reviewers who have contributed 3 or more ratings
+# Q5. Find the names of all reviewers who have contributed 3 or more ratings
 SELECT rv.name, COUNT(*) AS rating_times
 FROM reviewers rv
 JOIN ratings rt
@@ -176,7 +176,7 @@ ON rv.rid = rt.rid
 GROUP BY rv.name
 HAVING COUNT(*) >= 3;
 
-#Q7. Some directors directed more than 1 movie. For all such directors,
+#Q6. Some directors directed more than 1 movie. For all such directors,
 -- return the titles of all movies directed by them, along with the director name
 -- sort by director name, then movie title
 SELECT m1.director, m1.title
@@ -199,7 +199,7 @@ JOIN movies mv
 ON mv.director = cte.director
 ORDER BY 1;
 
-# Q8. Find the movie with highest average rating. 
+# Q7. Find the movie with highest average rating. 
 -- Return the movie titles and average rating. 
 WITH cte AS 
 	(SELECT rt.mid, mv.title, AVG(rt.stars) AS ratings_high
@@ -217,7 +217,7 @@ WHERE ratings_high = (
                       );
 
 
-# Q9. Return the highest rating movie for each director, 
+# Q8. Return the highest rating movie for each director, 
 -- return the director's name together with the titles of the movies 
 -- and the value of that rating. Ignore movies whose director is NULL
 WITH cte AS(
@@ -232,7 +232,7 @@ SELECT *
 FROM cte
 WHERE director != "NULL" AND rating_high = 1;
 
-# Q10. Find the titles of all movies not reviewed by Chris Jackson
+# Q9. Find the titles of all movies not reviewed by Chris Jackson
 SELECT title
 FROM movies
 WHERE mid not in(
