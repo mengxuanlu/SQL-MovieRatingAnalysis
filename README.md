@@ -3,6 +3,11 @@
 This SQL Analysis includes three tables. 
 Table "movies" contains mid(short for movie_id), title, year, director. Table "ratings" contains rid(short for reviewer_id), mid, stars, ratingdate. Table "reviewers" contains rid and name. 
 
+The relationship between the three tables is as below:
+
+<img src = "ER_Diagram.png" width = "800">
+
+
 We will use SQL to draw some insights for the database.
 
 Q1. Find each reviewer's lowest rating, return reviewer's name, movie title and stars.
